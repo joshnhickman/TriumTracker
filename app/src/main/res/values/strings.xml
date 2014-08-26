@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Trium Tracker</string>
+    <string name="character_name_hint">Character name</string>
+    <string name="player_name_hint">Player name</string>
+    <string name="ally_hint">Ally</string>
+    <string name="initiative_hint">New initiative</string>
+
+</resources>
