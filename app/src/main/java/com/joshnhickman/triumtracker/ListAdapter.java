@@ -43,7 +43,7 @@ public class ListAdapter extends BaseAdapter {
         characterName.setText(characters.get(position).getCharacterName());
         TextView playerName = (TextView) rowView.findViewById(R.id.player);
         playerName.setText(characters.get(position).getPlayerName());
-        TextView initiativeScore = (TextView) rowView.findViewById(R.id.score);
+        TextView initiativeScore = (TextView) rowView.findViewById(R.id.init);
         initiativeScore.setText(characters.get(position).getInitiativeScoreAsString());
         if (characters.get(position).getAlly()) {
             rowView.setBackgroundColor(context.getResources().getColor(R.color.green));

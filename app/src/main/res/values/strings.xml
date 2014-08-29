@@ -6,5 +6,7 @@
     <string name="player_name_hint">Player name</string>
     <string name="ally_hint">Ally</string>
     <string name="initiative_hint">New initiative</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 
 </resources>

@@ -33,7 +33,7 @@ public class TriumTracker extends Activity {
 
         characters = new ArrayList<PlayerCharacter>();
 
-        ListView listView = (ListView) findViewById(R.id.listview);
+        ListView listView = (ListView) findViewById(R.id.list_view);
         listAdapter = new ListAdapter(this, characters);
         listView.setAdapter(listAdapter);
 
