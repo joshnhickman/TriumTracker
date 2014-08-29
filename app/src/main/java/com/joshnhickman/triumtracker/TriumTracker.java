@@ -49,7 +49,7 @@ public class TriumTracker extends Activity {
                         .setTitle(characters.get(position).getCharacterName())
                         .setView(input)
                         .setView(initiativeView)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 String initiative = ((EditText) initiativeView.findViewById(R.id.new_initiative)).getText().toString();
                                 characters.get(position).setInitiativeScore(Integer.valueOf(initiative));
@@ -92,7 +92,7 @@ public class TriumTracker extends Activity {
             new AlertDialog.Builder(this)
                     .setTitle("Add new character")
                     .setView(newCharacterView)
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             String characterName = ((EditText) newCharacterView.findViewById(R.id.character_name_edit)).getText().toString();
                             String playerName = ((EditText) newCharacterView.findViewById(R.id.player_name_edit)).getText().toString();
