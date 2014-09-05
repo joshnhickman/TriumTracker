@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -31,8 +29,10 @@ import java.util.List;
 
 public class TriumTracker extends Activity {
     private static final String FILE_NAME = "trium_tracker_save";
-    private List<Actor> actors;
+
     private ListAdapter listAdapter;
+    private List<Actor> actors;
+    private int currentRound, currentActor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,65 +41,32 @@ public class TriumTracker extends Activity {
 
         loadState();
 
-        TextView roundView = (TextView) findViewById(R.id.round);
-        TextView timeView = (TextView) findViewById(R.id.time);
+        final TextView roundView = (TextView) findViewById(R.id.round);
+        final TextView timeView = (TextView) findViewById(R.id.time);
         Button nextButton = (Button) findViewById(R.id.next);
-        int currentPlayer = -1;
-        int currentRound = 0;
+        currentActor = -1;
+        currentRound = 0;
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                currentActor++;
+                if (currentActor > 0 && currentActor < actors.size()) {
+                    if (currentActor - 1 >= 0) actors.get(currentActor).setCurrent(false);
+                    actors.get(currentActor).setCurrent(true);
+                } else {
+                    currentActor = 0;
+                    currentRound++;
+                }
+                roundView.setText("Round: " + currentRound);
+                timeView.setText("Time: " + (currentRound * 6) + "s");
+                listAdapter.notifyDataSetChanged();
             }
         });
 
         ListView listView = (ListView) findViewById(R.id.list_view);
         listAdapter = new ListAdapter(this, actors);
         listView.setAdapter(listAdapter);
-
-        // Make list items respond to clicks by popping up an alert for information
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-                final EditText input = new EditText(view.getContext());
-                input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                LayoutInflater inflater = LayoutInflater.from(view.getContext());
-                final View initiativeView = inflater.inflate(R.layout.initiative_setter, parent, false);
-                new AlertDialog.Builder(view.getContext())
-                        .setTitle(actors.get(position).getName())
-                        .setView(input)
-                        .setView(initiativeView)
-                        .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                String initString = ((EditText) initiativeView.findViewById(R.id.new_init)).getText().toString();
-                                if (initString.isEmpty()) initString = actors.get(position).getInitAsString();
-                                String initModString = ((EditText) initiativeView.findViewById(R.id.new_init_mod)).getText().toString();
-                                if (initModString.isEmpty()) initModString = actors.get(position).getInitModAsString();
-                                try {
-                                    actors.get(position).setInit(Integer.parseInt(initString));
-                                    actors.get(position).setInitMod(Integer.parseInt(initModString));
-                                    Collections.sort(actors);
-                                    listAdapter.notifyDataSetChanged();
-                                } catch (NumberFormatException e) {
-                                    Toast.makeText(getApplicationContext(), "Initiative must be a valid number", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Cancelled
-                            }
-                        })
-                        .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                actors.remove(position);
-                                listAdapter.notifyDataSetChanged();
-                            }
-                        })
-                        .show();
-            }
-        });
     }
 
     @Override
@@ -146,8 +113,8 @@ public class TriumTracker extends Activity {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         saveState();
     }
 

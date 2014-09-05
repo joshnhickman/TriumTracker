@@ -9,7 +9,7 @@ public class Actor implements Comparable<Actor>, Serializable {
 
     private String name, playerName;
     private int init, initMod;
-    private boolean ally;
+    private boolean ally, current;
 
     public Actor(String name, String playerName, boolean ally) {
         this(name, playerName, ally, 0, 0);
@@ -22,6 +22,7 @@ public class Actor implements Comparable<Actor>, Serializable {
         this.ally = ally;
         this.init = init;
         this.initMod = initMod;
+        this.current = false;
     }
 
     public String getName() {
@@ -30,10 +31,6 @@ public class Actor implements Comparable<Actor>, Serializable {
 
     public String getPlayerName() {
         return playerName;
-    }
-
-    public boolean isAlly() {
-        return ally;
     }
 
     public void increaseInit(int inc) {
@@ -70,6 +67,18 @@ public class Actor implements Comparable<Actor>, Serializable {
 
     public String getInitModAsString() {
         return "" + initMod;
+    }
+
+    public boolean isAlly() {
+        return ally;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
+    }
+
+    public boolean isCurrent() {
+        return current;
     }
 
     @Override
