@@ -36,7 +36,15 @@ public class Actor implements Comparable<Actor>, Serializable {
         return ally;
     }
 
+    public void increaseInit(int inc) {
+        init += inc;
+        initMod = 0;
+    }
+
     public void setInit(int init) {
+        if (this.init != init) {
+            initMod = 0;
+        }
         this.init = init;
     }
 
@@ -46,6 +54,10 @@ public class Actor implements Comparable<Actor>, Serializable {
 
     public String getInitAsString() {
         return "" + init;
+    }
+
+    public void increaseInitMod(int inc) {
+        initMod += inc;
     }
 
     public void setInitMod(int initMod) {

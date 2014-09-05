@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao.Actor;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ListAdapter extends BaseAdapter {
@@ -36,9 +38,59 @@ public class ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.row_layout, parent, false);
+
+        ImageView plus = (ImageView) rowView.findViewById(R.id.plus);
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Actor thisActor = actors.get(position);
+                if (actors.size() >= 2 && position > 0) {
+                    Actor nextActor = actors.get(position - 1);
+                    if (nextActor.getInit() - thisActor.getInit() >= 1) {
+                        thisActor.increaseInit(1);
+                        if (nextActor.getInit() - thisActor.getInit() == 0) {
+                            thisActor.increaseInitMod(-1);
+                        }
+                    } else if (nextActor.getInitMod() - thisActor.getInitMod() >= 1){
+                        thisActor.setInitMod(nextActor.getInitMod() + 1);
+                    } else {
+                        thisActor.increaseInit(1);
+                    }
+                } else {
+                    thisActor.increaseInit(1);
+                }
+                Collections.sort(actors);
+                notifyDataSetChanged();
+            }
+        });
+        ImageView minus = (ImageView) rowView.findViewById(R.id.minus);
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Actor thisActor = actors.get(position);
+                if (actors.size() >= 2 && position < actors.size() - 1) {
+                    Actor prevActor = actors.get(position + 1);
+                    if (prevActor.getInit() - thisActor.getInit() <= -1) {
+                        thisActor.increaseInit(-1);
+                        if (prevActor.getInit() - thisActor.getInit() == 0) {
+                            thisActor.setInitMod(prevActor.getInitMod() + 1);
+                        }
+                    } else if (prevActor.getInitMod() - thisActor.getInitMod() <= -1){
+                        thisActor.setInitMod(prevActor.getInitMod() - 1);
+                    } else {
+                        thisActor.increaseInit(-1);
+                    }
+                } else {
+                    thisActor.increaseInit(-1);
+                }
+                Collections.sort(actors);
+                notifyDataSetChanged();
+            }
+        });
+
         TextView characterName = (TextView) rowView.findViewById(R.id.actor_name);
         characterName.setText(actors.get(position).getName());
         TextView playerName = (TextView) rowView.findViewById(R.id.player_name);
