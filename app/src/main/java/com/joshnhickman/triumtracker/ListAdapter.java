@@ -7,27 +7,27 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao.PlayerCharacter;
+import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao.Actor;
 
 import java.util.List;
 
 public class ListAdapter extends BaseAdapter {
     private Context context;
-    private List<PlayerCharacter> characters;
+    private List<Actor> actors;
 
-    public ListAdapter(Context context, List<PlayerCharacter> characters) {
+    public ListAdapter(Context context, List<Actor> actors) {
         this.context = context;
-        this.characters = characters;
+        this.actors = actors;
     }
 
     @Override
     public int getCount() {
-        return characters.size();
+        return actors.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return actors.get(position);
     }
 
     @Override
@@ -39,13 +39,13 @@ public class ListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.row_layout, parent, false);
-        TextView characterName = (TextView) rowView.findViewById(R.id.character);
-        characterName.setText(characters.get(position).getCharacterName());
-        TextView playerName = (TextView) rowView.findViewById(R.id.player);
-        playerName.setText(characters.get(position).getPlayerName());
+        TextView characterName = (TextView) rowView.findViewById(R.id.actor_name);
+        characterName.setText(actors.get(position).getName());
+        TextView playerName = (TextView) rowView.findViewById(R.id.player_name);
+        playerName.setText(actors.get(position).getPlayerName());
         TextView initiativeScore = (TextView) rowView.findViewById(R.id.init);
-        initiativeScore.setText(characters.get(position).getInitiativeScoreAsString());
-        if (characters.get(position).getAlly()) {
+        initiativeScore.setText(actors.get(position).getInitAsString());
+        if (actors.get(position).isAlly()) {
             rowView.setBackgroundColor(context.getResources().getColor(R.color.green));
         } else {
             rowView.setBackgroundColor(context.getResources().getColor(R.color.red));

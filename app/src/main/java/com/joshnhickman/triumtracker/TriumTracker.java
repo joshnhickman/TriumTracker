@@ -2,6 +2,7 @@ package com.joshnhickman.triumtracker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
@@ -10,20 +11,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao.PlayerCharacter;
+import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao.Actor;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
 public class TriumTracker extends Activity {
-    private List<PlayerCharacter> characters;
+    private static final String FILE_NAME = "trium_tracker_save";
+    private List<Actor> actors;
     private ListAdapter listAdapter;
 
     @Override
@@ -31,10 +39,23 @@ public class TriumTracker extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trium_tracker);
 
-        characters = new ArrayList<PlayerCharacter>();
+        loadState();
+
+        TextView roundView = (TextView) findViewById(R.id.round);
+        TextView timeView = (TextView) findViewById(R.id.time);
+        Button nextButton = (Button) findViewById(R.id.next);
+        int currentPlayer = -1;
+        int currentRound = 0;
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         ListView listView = (ListView) findViewById(R.id.list_view);
-        listAdapter = new ListAdapter(this, characters);
+        listAdapter = new ListAdapter(this, actors);
         listView.setAdapter(listAdapter);
 
         // Make list items respond to clicks by popping up an alert for information
@@ -46,15 +67,23 @@ public class TriumTracker extends Activity {
                 LayoutInflater inflater = LayoutInflater.from(view.getContext());
                 final View initiativeView = inflater.inflate(R.layout.initiative_setter, parent, false);
                 new AlertDialog.Builder(view.getContext())
-                        .setTitle(characters.get(position).getCharacterName())
+                        .setTitle(actors.get(position).getName())
                         .setView(input)
                         .setView(initiativeView)
                         .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                String initiative = ((EditText) initiativeView.findViewById(R.id.new_initiative)).getText().toString();
-                                characters.get(position).setInitiativeScore(Integer.valueOf(initiative));
-                                Collections.sort(characters);
-                                listAdapter.notifyDataSetChanged();
+                                String initString = ((EditText) initiativeView.findViewById(R.id.new_init)).getText().toString();
+                                if (initString.isEmpty()) initString = actors.get(position).getInitAsString();
+                                String initModString = ((EditText) initiativeView.findViewById(R.id.new_init_mod)).getText().toString();
+                                if (initModString.isEmpty()) initModString = actors.get(position).getInitModAsString();
+                                try {
+                                    actors.get(position).setInit(Integer.parseInt(initString));
+                                    actors.get(position).setInitMod(Integer.parseInt(initModString));
+                                    Collections.sort(actors);
+                                    listAdapter.notifyDataSetChanged();
+                                } catch (NumberFormatException e) {
+                                    Toast.makeText(getApplicationContext(), "Initiative must be a valid number", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         })
                         .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -64,7 +93,7 @@ public class TriumTracker extends Activity {
                         })
                         .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                characters.remove(position);
+                                actors.remove(position);
                                 listAdapter.notifyDataSetChanged();
                             }
                         })
@@ -75,16 +104,12 @@ public class TriumTracker extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.trium_tracker, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_new) {
             LayoutInflater inflater = LayoutInflater.from(this);
@@ -100,26 +125,64 @@ public class TriumTracker extends Activity {
                             if (characterName == null || characterName.isEmpty()) {
                                 Toast.makeText(getApplicationContext(), "Character name must be set", Toast.LENGTH_SHORT).show();
                             } else {
-                                characters.add(new PlayerCharacter(characterName, playerName, ally));
-                                Collections.sort(characters);
+                                actors.add(new Actor(characterName, playerName, ally));
+                                Collections.sort(actors);
                                 listAdapter.notifyDataSetChanged();
                             }
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Cancelled
-                        }
+                        public void onClick(DialogInterface dialog, int whichButton) { }
                     })
                     .show();
-
             return true;
         }
         if (id == R.id.action_discard) {
-            characters.clear();
+            actors.clear();
             listAdapter.notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        saveState();
+    }
+
+    private void saveState() {
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+        try {
+            fos = openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(actors);
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (fos != null) fos.close();
+                if (oos != null) oos.close();
+            } catch (Exception e) { }
+        }
+    }
+
+    private void loadState() {
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        try {
+            fis = openFileInput(FILE_NAME);
+            ois = new ObjectInputStream(fis);
+            actors = (List<Actor>) ois.readObject();
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (fis != null) fis.close();
+                if (ois != null) ois.close();
+            } catch (Exception e) { }
+        }
+        if (actors == null) {
+            actors = new ArrayList<Actor>();
+        }
     }
 }

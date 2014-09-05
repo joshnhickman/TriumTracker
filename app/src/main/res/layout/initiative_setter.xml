@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/new_initiative"
+        android:id="@+id/new_init"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:hint="@+string/initiative_hint"
+        android:layout_height="wrap_content"
+        android:hint="@string/init_hint"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/new_init_mod"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/init_mod_hint"
         android:inputType="number" />
 
 </LinearLayout>
