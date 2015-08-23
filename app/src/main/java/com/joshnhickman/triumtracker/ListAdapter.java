@@ -13,28 +13,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao.Actor;
-
-import java.util.Collections;
-import java.util.List;
+import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Actor;
+import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Tracker;
 
 public class ListAdapter extends BaseAdapter {
-    private Context context;
-    private List<Actor> actors;
 
-    public ListAdapter(Context context, List<Actor> actors) {
+    private Context context;
+    private Tracker tracker;
+
+    public ListAdapter(Context context, Tracker tracker) {
         this.context = context;
-        this.actors = actors;
+        this.tracker = tracker;
     }
 
     @Override
     public int getCount() {
-        return actors.size();
+        return tracker.getNumberOfActors();
     }
 
     @Override
     public Object getItem(int position) {
-        return actors.get(position);
+        return tracker.getActor(position);
     }
 
     @Override
@@ -51,9 +50,9 @@ public class ListAdapter extends BaseAdapter {
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Actor thisActor = actors.get(position);
-                if (actors.size() >= 2 && position > 0) {
-                    Actor nextActor = actors.get(position - 1);
+                Actor thisActor = tracker.getActor(position);
+                if (tracker.getNumberOfActors() >= 2 && position > 0) {
+                    Actor nextActor = tracker.getActor(position - 1);
                     if (nextActor.getInit() - thisActor.getInit() >= 1) {
                         thisActor.increaseInit(1);
                         if (nextActor.getInit() - thisActor.getInit() == 0) {
@@ -67,7 +66,7 @@ public class ListAdapter extends BaseAdapter {
                 } else {
                     thisActor.increaseInit(1);
                 }
-                Collections.sort(actors);
+                tracker.sort();
                 notifyDataSetChanged();
             }
         });
@@ -75,9 +74,9 @@ public class ListAdapter extends BaseAdapter {
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Actor thisActor = actors.get(position);
-                if (actors.size() >= 2 && position < actors.size() - 1) {
-                    Actor prevActor = actors.get(position + 1);
+                Actor thisActor = tracker.getActor(position);
+                if (tracker.getNumberOfActors() >= 2 && position < tracker.getNumberOfActors() - 1) {
+                    Actor prevActor = tracker.getActor(position + 1);
                     if (prevActor.getInit() - thisActor.getInit() <= -1) {
                         thisActor.increaseInit(-1);
                         if (prevActor.getInit() - thisActor.getInit() == 0) {
@@ -91,23 +90,18 @@ public class ListAdapter extends BaseAdapter {
                 } else {
                     thisActor.increaseInit(-1);
                 }
-                Collections.sort(actors);
+                tracker.sort();
                 notifyDataSetChanged();
             }
         });
 
         TextView characterName = (TextView) rowView.findViewById(R.id.actor_name);
-        characterName.setText(actors.get(position).getName());
+        characterName.setText(tracker.getActor(position).getName());
         TextView playerName = (TextView) rowView.findViewById(R.id.player_name);
-        playerName.setText(actors.get(position).getPlayerName());
+        playerName.setText(tracker.getActor(position).getPlayerName());
         TextView initiativeScore = (TextView) rowView.findViewById(R.id.init);
-        initiativeScore.setText(actors.get(position).getInitAsString());
-        if (actors.get(position).isCurrent()) {
-            playerName.setTextColor(context.getResources().getColor(R.color.yellow));
-        } else {
-            playerName.setTextColor(context.getResources().getColor(R.color.black));
-        }
-        if (actors.get(position).isAlly()) {
+        initiativeScore.setText(tracker.getActor(position).getInitAsString());
+        if (tracker.getActor(position).isAlly()) {
             rowView.setBackgroundColor(context.getResources().getColor(R.color.green));
         } else {
             rowView.setBackgroundColor(context.getResources().getColor(R.color.red));
@@ -121,19 +115,19 @@ public class ListAdapter extends BaseAdapter {
                 LayoutInflater inflater = LayoutInflater.from(view.getContext());
                 final View initiativeView = inflater.inflate(R.layout.initiative_setter, parent, false);
                 new AlertDialog.Builder(view.getContext())
-                        .setTitle(actors.get(position).getName())
+                        .setTitle(tracker.getActor(position).getName())
                         .setView(input)
                         .setView(initiativeView)
                         .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 String initString = ((EditText) initiativeView.findViewById(R.id.new_init)).getText().toString();
-                                if (initString.isEmpty()) initString = actors.get(position).getInitAsString();
+                                if (initString.isEmpty()) initString = tracker.getActor(position).getInitAsString();
                                 String initModString = ((EditText) initiativeView.findViewById(R.id.new_init_mod)).getText().toString();
-                                if (initModString.isEmpty()) initModString = actors.get(position).getInitModAsString();
+                                if (initModString.isEmpty()) initModString = tracker.getActor(position).getInitModAsString();
                                 try {
-                                    actors.get(position).setInit(Integer.parseInt(initString));
-                                    actors.get(position).setInitMod(Integer.parseInt(initModString));
-                                    Collections.sort(actors);
+                                    tracker.getActor(position).setInit(Integer.parseInt(initString));
+                                    tracker.getActor(position).setInitMod(Integer.parseInt(initModString));
+                                    tracker.sort();
                                     notifyDataSetChanged();
                                 } catch (NumberFormatException e) {
                                     Toast.makeText(context, "Initiative must be a valid number", Toast.LENGTH_SHORT).show();
@@ -147,7 +141,7 @@ public class ListAdapter extends BaseAdapter {
                         })
                         .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                actors.remove(position);
+                                tracker.removeActor(position);
                                 notifyDataSetChanged();
                             }
                         })

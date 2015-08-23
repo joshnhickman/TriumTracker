@@ -1,15 +1,14 @@
-package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao;
+package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain;
 
 import java.io.Serializable;
 
-/**
- * Created by Josh on 8/25/2014.
- */
 public class Actor implements Comparable<Actor>, Serializable {
 
-    private String name, playerName;
-    private int init, initMod;
-    private boolean ally, current;
+    private String name;
+    private String playerName;
+    private int init;
+    private int initMod;
+    private boolean ally;
 
     public Actor(String name, String playerName, boolean ally) {
         this(name, playerName, ally, 0, 0);
@@ -22,7 +21,6 @@ public class Actor implements Comparable<Actor>, Serializable {
         this.ally = ally;
         this.init = init;
         this.initMod = initMod;
-        this.current = false;
     }
 
     public String getName() {
@@ -73,14 +71,6 @@ public class Actor implements Comparable<Actor>, Serializable {
         return ally;
     }
 
-    public void setCurrent(boolean current) {
-        this.current = current;
-    }
-
-    public boolean isCurrent() {
-        return current;
-    }
-
     @Override
     public int compareTo(Actor another) {
         int initDiff = another.getInit() - init;
@@ -88,5 +78,14 @@ public class Actor implements Comparable<Actor>, Serializable {
             return initDiff;
         }
         return another.getInitMod() - initMod;
+    }
+
+    @Override
+    public String toString() {
+        String s = getName();
+        if (getPlayerName() != null && !getPlayerName().isEmpty()) {
+            s += " (" + getPlayerName() + ")";
+        }
+        return s;
     }
 }

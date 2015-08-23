@@ -13,26 +13,23 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.dao.Actor;
+import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Actor;
+import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Tracker;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
 public class TriumTracker extends Activity {
+
     private static final String FILE_NAME = "trium_tracker_save";
 
     private ListAdapter listAdapter;
-    private List<Actor> actors;
-    private int currentRound, currentActor;
+    private Tracker tracker;
+//    private int currentRound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +38,25 @@ public class TriumTracker extends Activity {
 
         loadState();
 
-        final TextView roundView = (TextView) findViewById(R.id.round);
-        final TextView timeView = (TextView) findViewById(R.id.time);
+//        final TextView roundView = (TextView) findViewById(R.id.round);
+//        final TextView timeView = (TextView) findViewById(R.id.time);
         Button nextButton = (Button) findViewById(R.id.next);
-        currentActor = -1;
-        currentRound = 0;
 
+        // initialize the next button
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentActor++;
-                if (currentActor > 0 && currentActor < actors.size()) {
-                    if (currentActor - 1 >= 0) actors.get(currentActor).setCurrent(false);
-                    actors.get(currentActor).setCurrent(true);
-                } else {
-                    currentActor = 0;
-                    currentRound++;
-                }
-                roundView.setText("Round: " + currentRound);
-                timeView.setText("Time: " + (currentRound * 6) + "s");
-                listAdapter.notifyDataSetChanged();
+                tracker.nextActor();
+//                roundView.setText("Round: " + currentRound);
+//                timeView.setText("Time: " + (currentRound * 6) + "s");
+//                listAdapter.notifyDataSetChanged();
+                Globals.updateNotification(getApplicationContext());
             }
         });
 
+        // initialize the view
         ListView listView = (ListView) findViewById(R.id.list_view);
-        listAdapter = new ListAdapter(this, actors);
+        listAdapter = new ListAdapter(this, tracker);
         listView.setAdapter(listAdapter);
     }
 
@@ -89,11 +80,10 @@ public class TriumTracker extends Activity {
                             String characterName = ((EditText) newCharacterView.findViewById(R.id.character_name_edit)).getText().toString();
                             String playerName = ((EditText) newCharacterView.findViewById(R.id.player_name_edit)).getText().toString();
                             boolean ally = ((CheckBox) newCharacterView.findViewById(R.id.ally_check)).isChecked();
-                            if (characterName == null || characterName.isEmpty()) {
+                            if (characterName.isEmpty()) {
                                 Toast.makeText(getApplicationContext(), "Character name must be set", Toast.LENGTH_SHORT).show();
                             } else {
-                                actors.add(new Actor(characterName, playerName, ally));
-                                Collections.sort(actors);
+                                tracker.addActor(new Actor(characterName, playerName, ally));
                                 listAdapter.notifyDataSetChanged();
                             }
                         }
@@ -105,7 +95,7 @@ public class TriumTracker extends Activity {
             return true;
         }
         if (id == R.id.action_discard) {
-            actors.clear();
+            tracker.clear();
             listAdapter.notifyDataSetChanged();
             return true;
         }
@@ -118,38 +108,31 @@ public class TriumTracker extends Activity {
         saveState();
     }
 
+    /**
+     * Saves the current characters
+     */
     private void saveState() {
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-        try {
-            fos = openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(actors);
+        try (ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(FILE_NAME, Context.MODE_PRIVATE))) {
+            oos.writeObject(tracker.getActors());
         } catch (Exception e) {
-        } finally {
-            try {
-                if (fos != null) fos.close();
-                if (oos != null) oos.close();
-            } catch (Exception e) { }
+            Toast.makeText(getApplicationContext(), "failed to save state", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Loads the last used characters
+     */
+    @SuppressWarnings("unchecked")
     private void loadState() {
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        try {
-            fis = openFileInput(FILE_NAME);
-            ois = new ObjectInputStream(fis);
-            actors = (List<Actor>) ois.readObject();
+        try (ObjectInputStream ois = new ObjectInputStream(openFileInput(FILE_NAME))) {
+            tracker = new Tracker((List<Actor>) ois.readObject());
         } catch (Exception e) {
-        } finally {
-            try {
-                if (fis != null) fis.close();
-                if (ois != null) ois.close();
-            } catch (Exception e) { }
+            Toast.makeText(getApplicationContext(), "failed to load saved state", Toast.LENGTH_SHORT).show();
         }
-        if (actors == null) {
-            actors = new ArrayList<Actor>();
+        if (tracker == null) {
+            tracker = new Tracker();
         }
+        Globals.tracker = tracker;
     }
+
 }
