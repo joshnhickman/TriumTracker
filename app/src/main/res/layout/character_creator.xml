@@ -12,13 +12,38 @@
         android:id="@+id/player_name_edit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@+string/player_name_hint" />
+        android:hint="@string/player_name_hint" />
 
-    <CheckBox
-        android:id="@+id/ally_check"
+    <RadioGroup
+        android:id="@+id/radio_disposition"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:checked="true"
-        android:hint="@+string/ally_hint" />
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/radio_party"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/party"/>
+        <RadioButton
+            android:id="@+id/radio_ally"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ally"/>
+        <RadioButton
+            android:id="@+id/radio_neutral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/neutral"/>
+        <RadioButton
+            android:id="@+id/radio_enemy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enemy"/>
+        <RadioButton
+            android:id="@+id/radio_danger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/danger"/>
+    </RadioGroup>
 
 </LinearLayout>

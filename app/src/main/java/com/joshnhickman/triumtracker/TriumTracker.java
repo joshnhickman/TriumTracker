@@ -10,13 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Actor;
+import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Disposition;
 import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Tracker;
 
 import java.io.ObjectInputStream;
@@ -31,7 +32,7 @@ public class TriumTracker extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trium_tracker);
+        setContentView(R.layout.trium_tracker);
 
         loadState();
 
@@ -81,11 +82,16 @@ public class TriumTracker extends Activity {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             String characterName = ((EditText) newCharacterView.findViewById(R.id.character_name_edit)).getText().toString();
                             String playerName = ((EditText) newCharacterView.findViewById(R.id.player_name_edit)).getText().toString();
-                            boolean ally = ((CheckBox) newCharacterView.findViewById(R.id.ally_check)).isChecked();
+                            RadioGroup dispositionRadioGroup =
+                                    (RadioGroup) newCharacterView.findViewById(R.id.radio_disposition);
+                            RadioButton dispositionRadioButton =
+                                    (RadioButton) newCharacterView.findViewById(dispositionRadioGroup.getCheckedRadioButtonId());
+                            Disposition disposition =
+                                    Disposition.valueOf(dispositionRadioButton.getText().toString().toUpperCase());
                             if (characterName.isEmpty()) {
                                 Toast.makeText(getApplicationContext(), "Character name must be set", Toast.LENGTH_SHORT).show();
                             } else {
-                                Globals.tracker.addActor(new Actor(characterName, playerName, ally));
+                                Globals.tracker.addActor(new Actor(characterName, playerName, disposition));
                                 Globals.listAdapter.notifyDataSetChanged();
                             }
                         }

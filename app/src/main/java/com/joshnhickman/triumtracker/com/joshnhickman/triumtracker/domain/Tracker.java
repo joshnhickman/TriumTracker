@@ -67,7 +67,7 @@ public class Tracker implements Serializable {
      * @return the current Actor
      */
     public Actor getCurrentActor() {
-        if (!actors.isEmpty()) {
+        if (!actors.isEmpty() && currentTurn >= 0) {
             return actors.get(currentTurn);
         }
         return null;

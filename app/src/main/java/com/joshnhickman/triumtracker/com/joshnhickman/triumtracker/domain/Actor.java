@@ -1,24 +1,32 @@
 package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 public class Actor implements Comparable<Actor>, Serializable {
 
     private String name;
     private String playerName;
+    private Disposition disposition;
     private int init;
     private int initMod;
     private boolean ally;
 
-    public Actor(String name, String playerName, boolean ally) {
-        this(name, playerName, ally, 0, 0);
+    public Actor(String name, String playerName, Disposition disposition) {
+        this(name, playerName, disposition, 0, 0);
     }
 
-    public Actor(String name, String playerName, boolean ally,
-                 int init, int initMod) {
+    public Actor(String name, String playerName, Disposition disposition, int init, int initMod) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("name cannot be null or empty");
+        }
+        if (disposition == null) {
+            throw new IllegalArgumentException("disposition cannot be empty");
+        }
         this.name = name;
         this.playerName = playerName;
-        this.ally = ally;
+        this.disposition = disposition;
         this.init = init;
         this.initMod = initMod;
     }
@@ -67,8 +75,8 @@ public class Actor implements Comparable<Actor>, Serializable {
         return "" + initMod;
     }
 
-    public boolean isAlly() {
-        return ally;
+    public Disposition getDisposition() {
+        return disposition;
     }
 
     @Override

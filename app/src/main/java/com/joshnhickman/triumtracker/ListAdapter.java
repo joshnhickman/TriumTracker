@@ -38,19 +38,20 @@ public class ListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.row_layout, parent, false);
+        View actorView = inflater.inflate(R.layout.actor, parent, false);
 
-        ImageView plus = (ImageView) rowView.findViewById(R.id.plus);
+        final Actor thisActor = tracker.getActor(position);
+
+        ImageView plus = (ImageView) actorView.findViewById(R.id.plus);
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Actor thisActor = tracker.getActor(position);
                 if (tracker.getNumberOfActors() >= 2 && position > 0) {
                     Actor nextActor = tracker.getActor(position - 1);
                     if (nextActor.getInit() - thisActor.getInit() >= 1) {
@@ -58,7 +59,7 @@ public class ListAdapter extends BaseAdapter {
                         if (nextActor.getInit() - thisActor.getInit() == 0) {
                             thisActor.increaseInitMod(-1);
                         }
-                    } else if (nextActor.getInitMod() - thisActor.getInitMod() >= 1){
+                    } else if (nextActor.getInitMod() - thisActor.getInitMod() >= 1) {
                         thisActor.setInitMod(nextActor.getInitMod() + 1);
                     } else {
                         thisActor.increaseInit(1);
@@ -70,11 +71,10 @@ public class ListAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
         });
-        ImageView minus = (ImageView) rowView.findViewById(R.id.minus);
+        ImageView minus = (ImageView) actorView.findViewById(R.id.minus);
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Actor thisActor = tracker.getActor(position);
                 if (tracker.getNumberOfActors() >= 2 && position < tracker.getNumberOfActors() - 1) {
                     Actor prevActor = tracker.getActor(position + 1);
                     if (prevActor.getInit() - thisActor.getInit() <= -1) {
@@ -82,7 +82,7 @@ public class ListAdapter extends BaseAdapter {
                         if (prevActor.getInit() - thisActor.getInit() == 0) {
                             thisActor.setInitMod(prevActor.getInitMod() + 1);
                         }
-                    } else if (prevActor.getInitMod() - thisActor.getInitMod() <= -1){
+                    } else if (prevActor.getInitMod() - thisActor.getInitMod() <= -1) {
                         thisActor.setInitMod(prevActor.getInitMod() - 1);
                     } else {
                         thisActor.increaseInit(-1);
@@ -95,27 +95,20 @@ public class ListAdapter extends BaseAdapter {
             }
         });
 
-        TextView characterName = (TextView) rowView.findViewById(R.id.actor_name);
-        characterName.setText(tracker.getActor(position).getName());
-        TextView playerName = (TextView) rowView.findViewById(R.id.player_name);
-        playerName.setText(tracker.getActor(position).getPlayerName());
-        TextView initiativeScore = (TextView) rowView.findViewById(R.id.init);
-        initiativeScore.setText(tracker.getActor(position).getInitAsString());
+        // set TextViews
+        ((TextView) actorView.findViewById(R.id.actor_name)).setText(thisActor.getName());
+        ((TextView) actorView.findViewById(R.id.player_name)).setText(thisActor.getPlayerName());
+        ((TextView) actorView.findViewById(R.id.init)).setText(thisActor.getInitAsString());
 
-        int backgroundColor;
-        ImageView factionIndicator = (ImageView) rowView.findViewById(R.id.faction_indicator);
-        if (tracker.getActor(position).isAlly()) {
-            backgroundColor = context.getResources().getColor(R.color.green);
-//            factionIndicator.setBackgroundColor(context.getResources().getColor(R.color.green));
-        } else {
-            backgroundColor = context.getResources().getColor(R.color.red);
-//            factionIndicator.setBackgroundColor(context.getResources().getColor(R.color.red));
-        }
-        factionIndicator.setBackgroundColor(backgroundColor);
+        // set disposition indicator
+        actorView.findViewById(R.id.disposition_indicator)
+                .setBackgroundColor(context.getResources().getColor(tracker.getActor(position).getDisposition().getColorId()));
         if (tracker.isCurrentActor(position)) {
-            rowView.setBackgroundColor(backgroundColor);
+            actorView.setBackgroundColor(context.getResources().getColor(tracker.getActor(position).getDisposition().getColorId()));
         }
 
+        // set initiative score setter
+        TextView initiativeScore = (TextView) actorView.findViewById(R.id.init);
         initiativeScore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,6 +151,6 @@ public class ListAdapter extends BaseAdapter {
             }
         });
 
-        return rowView;
+        return actorView;
     }
 }

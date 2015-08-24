@@ -22,16 +22,16 @@ public class Globals {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Trium Tracker")
-                .setContentText(tracker.getCurrentActor().toString())
+                .setContentText("CURRENT: " + tracker.getCurrentActor().toString())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setCategory(Notification.CATEGORY_STATUS);
 
         // extended view
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
         style.setBigContentTitle("Trium Tracker");
-        style.addLine(tracker.getCurrentActor().toString());
+        style.addLine("CURRENT: " + tracker.getCurrentActor().toString());
         if (tracker.getNextTurn() != null) {
-            style.addLine(tracker.getNextTurn().toString());
+            style.addLine("NEXT: " + tracker.getNextTurn().toString());
         }
         builder.setStyle(style);
 

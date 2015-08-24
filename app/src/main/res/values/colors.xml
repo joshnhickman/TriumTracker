@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#ff000000</color>
-    <color name="red">#ffed9b96</color>
-    <color name="blue">#bcc7ff</color>
-    <color name="green">#ffb1ffb0</color>
-    <color name="yellow">#fffffda0</color>
+
+    <color name="party">#9FA8DA</color>
+    <color name="ally">#C5E1A5</color>
+    <color name="neutral">#E0E0E0</color>
+    <color name="enemy">#EF9A9A</color>
+    <color name="danger">#FF9800</color>
+
+    <color name="primary">#3F51B5</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="accent">#9C27B0</color>
+
 </resources>

@@ -4,17 +4,16 @@
     android:layout_height="50dp">
 
     <ImageView
-        android:id="@+id/faction_indicator"
+        android:id="@+id/disposition_indicator"
         android:layout_width="10dp"
-        android:layout_height="fill_parent"
-        android:background="@drawable/neutral"/>
+        android:layout_height="fill_parent"/>
 
     <LinearLayout
-        android:id="@+id/name_view"
-        android:orientation="vertical"
+        android:id="@+id/name_layout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_toEndOf="@+id/faction_indicator">
+        android:layout_toEndOf="@+id/disposition_indicator"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/actor_name"
