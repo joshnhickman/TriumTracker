@@ -1,8 +1,5 @@
 package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,18 +8,17 @@ import java.util.List;
 public class Tracker implements Serializable {
 
     private List<Actor> actors;
-    private int currentActor;
-    private int nextActor;
+    private int currentTurn;
+    private int nextTurn;
 
     public Tracker() {
-        currentActor = -1;
-        nextActor = -1;
+        currentTurn = -1;
+        nextTurn = -1;
         actors = new ArrayList<>();
     }
 
     public Tracker(List<Actor> actors) {
-        currentActor = -1;
-        nextActor = -1;
+        this();
         this.actors = actors;
     }
 
@@ -37,19 +33,30 @@ public class Tracker implements Serializable {
     /**
      * moves to the next Actor
      */
-    public void nextActor() {
-        currentActor++;
-        if (!isInBounds(currentActor)) {
-            currentActor = 0;
-        }
-        if (actors.size() > 1) {
-            nextActor = currentActor + 1;
-            if (!isInBounds(nextActor)) {
-                nextActor = 0;
+    public void nextTurn() {
+        if (!actors.isEmpty()) {
+            currentTurn++;
+            if (!isInBounds(currentTurn)) {
+                currentTurn = 0;
+            }
+            if (actors.size() > 1) {
+                nextTurn = currentTurn + 1;
+                if (!isInBounds(nextTurn)) {
+                    nextTurn = 0;
+                }
+            } else {
+                nextTurn = -1;
             }
         } else {
-            nextActor = -1;
+            currentTurn = -1;
+            nextTurn = -1;
         }
+    }
+
+    public void resetTurn() {
+        currentTurn = -1;
+        nextTurn = -1;
+        nextTurn();
     }
 
     private boolean isInBounds(int index) {
@@ -61,17 +68,21 @@ public class Tracker implements Serializable {
      */
     public Actor getCurrentActor() {
         if (!actors.isEmpty()) {
-            return actors.get(currentActor);
+            return actors.get(currentTurn);
         }
         return null;
+    }
+
+    public boolean isCurrentActor(int index) {
+        return currentTurn == index;
     }
 
     /**
      * @return the next Actor
      */
-    public Actor getNextActor() {
+    public Actor getNextTurn() {
         if (actors.size() > 1) {
-            return actors.get(nextActor);
+            return actors.get(nextTurn);
         }
         return null;
     }
@@ -91,6 +102,9 @@ public class Tracker implements Serializable {
         }
     }
 
+    /**
+     * @return the List of Actors
+     */
     public List<Actor> getActors() {
         return actors;
     }
@@ -122,10 +136,13 @@ public class Tracker implements Serializable {
         }
     }
 
+    /**
+     * Clears the List of Actors
+     */
     public void clear() {
         actors.clear();
-        currentActor = -1;
-        nextActor = -1;
+        currentTurn = -1;
+        nextTurn = -1;
     }
 
 }

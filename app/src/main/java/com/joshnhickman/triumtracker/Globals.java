@@ -14,10 +14,10 @@ public class Globals {
 
     public static final int NOTIFICATION_ID = 7777;
 
+    public static ListAdapter listAdapter;
     public static Tracker tracker;
 
     public static void updateNotification(Context context) {
-
         // base notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
@@ -30,17 +30,18 @@ public class Globals {
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
         style.setBigContentTitle("Trium Tracker");
         style.addLine(tracker.getCurrentActor().toString());
-        if (tracker.getNextActor() != null) {
-            style.addLine(tracker.getNextActor().toString());
+        if (tracker.getNextTurn() != null) {
+            style.addLine(tracker.getNextTurn().toString());
         }
         builder.setStyle(style);
 
-        Intent nextActorIntent = new Intent(context, NextActorReceiver.class);
+        // add the next button
+        Intent nextActorIntent = new Intent(context, NextTurnReceiver.class);
         nextActorIntent.putExtra("tracker", tracker);
         PendingIntent nextPendingIntent =
                 PendingIntent.getBroadcast(context, 0, nextActorIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.addAction(R.drawable.ic_action_upload, "Next", nextPendingIntent);
+        builder.addAction(R.drawable.ic_action_upload, "NEXT", nextPendingIntent);
 
         // intent to use when clicked
         Intent resultIntent = new Intent(context, TriumTracker.class);

@@ -9,5 +9,7 @@
     <string name="init_mod_hint">New initiative modifier</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <string name="next">NEXT</string>
+    <string name="reset">RESET</string>
 
 </resources>

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Actor;
@@ -27,10 +28,6 @@ public class TriumTracker extends Activity {
 
     private static final String FILE_NAME = "trium_tracker_save";
 
-    private ListAdapter listAdapter;
-    private Tracker tracker;
-//    private int currentRound;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,26 +35,31 @@ public class TriumTracker extends Activity {
 
         loadState();
 
-//        final TextView roundView = (TextView) findViewById(R.id.round);
-//        final TextView timeView = (TextView) findViewById(R.id.time);
-        Button nextButton = (Button) findViewById(R.id.next);
-
         // initialize the next button
+        Button nextButton = (Button) findViewById(R.id.next);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tracker.nextActor();
-//                roundView.setText("Round: " + currentRound);
-//                timeView.setText("Time: " + (currentRound * 6) + "s");
-//                listAdapter.notifyDataSetChanged();
+                Globals.tracker.nextTurn();
                 Globals.updateNotification(getApplicationContext());
+                Globals.listAdapter.notifyDataSetChanged();
+            }
+        });
+
+        Button resetButton = (Button) findViewById(R.id.reset);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Globals.tracker.resetTurn();
+                Globals.updateNotification(getApplicationContext());
+                Globals.listAdapter.notifyDataSetChanged();
             }
         });
 
         // initialize the view
         ListView listView = (ListView) findViewById(R.id.list_view);
-        listAdapter = new ListAdapter(this, tracker);
-        listView.setAdapter(listAdapter);
+        Globals.listAdapter = new ListAdapter(this, Globals.tracker);
+        listView.setAdapter(Globals.listAdapter);
     }
 
     @Override
@@ -83,8 +85,8 @@ public class TriumTracker extends Activity {
                             if (characterName.isEmpty()) {
                                 Toast.makeText(getApplicationContext(), "Character name must be set", Toast.LENGTH_SHORT).show();
                             } else {
-                                tracker.addActor(new Actor(characterName, playerName, ally));
-                                listAdapter.notifyDataSetChanged();
+                                Globals.tracker.addActor(new Actor(characterName, playerName, ally));
+                                Globals.listAdapter.notifyDataSetChanged();
                             }
                         }
                     })
@@ -95,8 +97,8 @@ public class TriumTracker extends Activity {
             return true;
         }
         if (id == R.id.action_discard) {
-            tracker.clear();
-            listAdapter.notifyDataSetChanged();
+            Globals.tracker.clear();
+            Globals.listAdapter.notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -113,7 +115,7 @@ public class TriumTracker extends Activity {
      */
     private void saveState() {
         try (ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(FILE_NAME, Context.MODE_PRIVATE))) {
-            oos.writeObject(tracker.getActors());
+            oos.writeObject(Globals.tracker.getActors());
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "failed to save state", Toast.LENGTH_SHORT).show();
         }
@@ -125,14 +127,13 @@ public class TriumTracker extends Activity {
     @SuppressWarnings("unchecked")
     private void loadState() {
         try (ObjectInputStream ois = new ObjectInputStream(openFileInput(FILE_NAME))) {
-            tracker = new Tracker((List<Actor>) ois.readObject());
+            Globals.tracker = new Tracker((List<Actor>) ois.readObject());
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "failed to load saved state", Toast.LENGTH_SHORT).show();
         }
-        if (tracker == null) {
-            tracker = new Tracker();
+        if (Globals.tracker == null) {
+            Globals.tracker = new Tracker();
         }
-        Globals.tracker = tracker;
     }
 
 }

@@ -1,66 +1,70 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="50dp">
 
     <ImageView
-        android:id="@+id/minus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:src="@drawable/ic_action_download"/>
+        android:id="@+id/faction_indicator"
+        android:layout_width="10dp"
+        android:layout_height="fill_parent"
+        android:background="@drawable/neutral"/>
 
     <LinearLayout
         android:id="@+id/name_view"
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2" >
+        android:layout_height="fill_parent"
+        android:layout_toEndOf="@+id/faction_indicator">
 
         <TextView
             android:id="@+id/actor_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="3"
+            android:layout_marginStart="5dp"
             android:singleLine="true"
             android:textSize="20sp"
-            android:text="Name" />
+            android:text="Name"/>
 
         <TextView
             android:id="@+id/player_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
+            android:layout_marginStart="5dp"
             android:singleLine="true"
             android:textSize="12sp"
-            android:text="Player Name" />
-
+            android:text="Player Name"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/init"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_weight="2"
-        android:gravity="right"
+        android:gravity="end"
         android:singleLine="true"
         android:textSize="30sp"
+        android:layout_toLeftOf="@+id/minus"
         android:text="0"/>
+
+    <ImageView
+        android:id="@+id/minus"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:layout_toStartOf="@+id/plus"
+        android:src="@drawable/ic_action_download"/>
 
     <ImageView
         android:id="@+id/plus"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_margin="5dp"
         android:gravity="center"
+        android:layout_alignParentEnd="true"
         android:src="@drawable/ic_action_upload"/>
-
-</LinearLayout>
+</RelativeLayout>

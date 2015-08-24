@@ -101,10 +101,19 @@ public class ListAdapter extends BaseAdapter {
         playerName.setText(tracker.getActor(position).getPlayerName());
         TextView initiativeScore = (TextView) rowView.findViewById(R.id.init);
         initiativeScore.setText(tracker.getActor(position).getInitAsString());
+
+        int backgroundColor;
+        ImageView factionIndicator = (ImageView) rowView.findViewById(R.id.faction_indicator);
         if (tracker.getActor(position).isAlly()) {
-            rowView.setBackgroundColor(context.getResources().getColor(R.color.green));
+            backgroundColor = context.getResources().getColor(R.color.green);
+//            factionIndicator.setBackgroundColor(context.getResources().getColor(R.color.green));
         } else {
-            rowView.setBackgroundColor(context.getResources().getColor(R.color.red));
+            backgroundColor = context.getResources().getColor(R.color.red);
+//            factionIndicator.setBackgroundColor(context.getResources().getColor(R.color.red));
+        }
+        factionIndicator.setBackgroundColor(backgroundColor);
+        if (tracker.isCurrentActor(position)) {
+            rowView.setBackgroundColor(backgroundColor);
         }
 
         initiativeScore.setOnClickListener(new View.OnClickListener() {
