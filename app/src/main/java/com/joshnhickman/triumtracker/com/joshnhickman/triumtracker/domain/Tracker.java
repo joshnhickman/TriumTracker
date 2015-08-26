@@ -1,5 +1,7 @@
 package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain;
 
+import com.joshnhickman.triumtracker.Globals;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,12 +53,14 @@ public class Tracker implements Serializable {
             currentTurn = -1;
             nextTurn = -1;
         }
+        Globals.listAdapter.notifyDataSetChanged();
     }
 
     public void resetTurn() {
         currentTurn = -1;
         nextTurn = -1;
         nextTurn();
+        Globals.listAdapter.notifyDataSetChanged();
     }
 
     private boolean isInBounds(int index) {
@@ -71,6 +75,26 @@ public class Tracker implements Serializable {
             return actors.get(currentTurn);
         }
         return null;
+    }
+
+    public Actor getNextActor() {
+        if (!actors.isEmpty() && nextTurn >= 0) {
+            return actors.get(nextTurn);
+        }
+        return null;
+    }
+
+    public Actor[] getNextActors(int number) {
+        Actor[] returnedActors = new Actor[number];
+        int tempTurn = currentTurn;
+        for (int i = 0; i < number; i++) {
+            tempTurn++;
+            if (tempTurn >= actors.size()) {
+                tempTurn = 0;
+            }
+            returnedActors[i] = actors.get(tempTurn);
+        }
+        return returnedActors;
     }
 
     public boolean isCurrentActor(int index) {
@@ -121,6 +145,7 @@ public class Tracker implements Serializable {
      */
     public void sort() {
         Collections.sort(actors);
+        Globals.listAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -134,6 +159,7 @@ public class Tracker implements Serializable {
         if (isInBounds(index)) {
             actors.remove(index);
         }
+        Globals.listAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -143,6 +169,7 @@ public class Tracker implements Serializable {
         actors.clear();
         currentTurn = -1;
         nextTurn = -1;
+        Globals.listAdapter.notifyDataSetChanged();
     }
 
 }

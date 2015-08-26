@@ -68,7 +68,6 @@ public class ListAdapter extends BaseAdapter {
                     thisActor.increaseInit(1);
                 }
                 tracker.sort();
-                notifyDataSetChanged();
             }
         });
         ImageView minus = (ImageView) actorView.findViewById(R.id.minus);
@@ -91,7 +90,6 @@ public class ListAdapter extends BaseAdapter {
                     thisActor.increaseInit(-1);
                 }
                 tracker.sort();
-                notifyDataSetChanged();
             }
         });
 

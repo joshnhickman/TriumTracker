@@ -42,8 +42,9 @@ public class TriumTracker extends Activity {
             @Override
             public void onClick(View view) {
                 Globals.tracker.nextTurn();
-                Globals.updateNotification(getApplicationContext());
-                Globals.listAdapter.notifyDataSetChanged();
+                NotificationUpdater.updateNotification(getApplicationContext(),
+                        Globals.tracker.getCurrentActor(),
+                        Globals.tracker.getNextActors(1));
             }
         });
 
@@ -52,8 +53,9 @@ public class TriumTracker extends Activity {
             @Override
             public void onClick(View view) {
                 Globals.tracker.resetTurn();
-                Globals.updateNotification(getApplicationContext());
-                Globals.listAdapter.notifyDataSetChanged();
+                NotificationUpdater.updateNotification(getApplicationContext(),
+                        Globals.tracker.getCurrentActor(),
+                        Globals.tracker.getNextActors(1));
             }
         });
 
