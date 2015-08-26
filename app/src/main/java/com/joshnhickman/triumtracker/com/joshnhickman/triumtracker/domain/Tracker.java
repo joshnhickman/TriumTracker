@@ -65,28 +65,6 @@ public class Tracker implements Serializable {
         return null;
     }
 
-    public Actor getPreviousActor() {
-        if (!actors.isEmpty()) {
-            int prevTurn = currentTurn - 1;
-            if (prevTurn < 0) {
-                prevTurn = actors.size() - 1;
-            }
-            return actors.get(prevTurn);
-        }
-        return null;
-    }
-
-    public Actor getNextActor() {
-        if (!actors.isEmpty()) {
-            int nextTurn = currentTurn + 1;
-            if (nextTurn >= actors.size()) {
-                nextTurn = 0;
-            }
-            return actors.get(nextTurn);
-        }
-        return null;
-    }
-
     public Actor[] getNextActors(int number) {
         Actor[] returnedActors = new Actor[number];
         int tempTurn = currentTurn;

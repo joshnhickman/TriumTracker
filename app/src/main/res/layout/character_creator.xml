@@ -18,7 +18,8 @@
         android:id="@+id/radio_disposition"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:checkedButton="@+id/radio_party">
         <RadioButton
             android:id="@+id/radio_party"
             android:layout_width="wrap_content"
@@ -44,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/danger"/>
+
     </RadioGroup>
 
 </LinearLayout>

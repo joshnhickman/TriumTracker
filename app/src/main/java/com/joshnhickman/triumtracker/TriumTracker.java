@@ -96,8 +96,11 @@ public class TriumTracker extends Activity {
                                     (RadioButton) newCharacterView.findViewById(dispositionRadioGroup.getCheckedRadioButtonId());
                             Disposition disposition =
                                     Disposition.valueOf(dispositionRadioButton.getText().toString().toUpperCase());
+                            if (disposition != Disposition.PARTY && (playerName == null || playerName.isEmpty()))
+                                playerName = "Game Master";
+
                             if (characterName.isEmpty()) {
-                                Toast.makeText(getApplicationContext(), "Character name must be set", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "character name must be set", Toast.LENGTH_SHORT).show();
                             } else {
                                 Globals.tracker.addActor(new Actor(characterName, playerName, disposition));
                                 Globals.listAdapter.notifyDataSetChanged();
