@@ -2,9 +2,15 @@ package com.joshnhickman.triumtracker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -116,6 +122,13 @@ public class TriumTracker extends Activity {
     public void onPause() {
         super.onPause();
         saveState();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE))
+                .cancel(Globals.NOTIFICATION_ID);
     }
 
     /**

@@ -52,17 +52,15 @@ public class ListAdapter extends BaseAdapter {
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tracker.getNumberOfActors() >= 2 && position > 0) {
-                    Actor nextActor = tracker.getActor(position - 1);
-                    if (nextActor.getInit() - thisActor.getInit() >= 1) {
-                        thisActor.increaseInit(1);
-                        if (nextActor.getInit() - thisActor.getInit() == 0) {
-                            thisActor.increaseInitMod(-1);
-                        }
-                    } else if (nextActor.getInitMod() - thisActor.getInitMod() >= 1) {
-                        thisActor.setInitMod(nextActor.getInitMod() + 1);
+                if (position > 0) {
+                    Actor prevActor = tracker.getActor(position - 1);
+                    if (thisActor.getInit() == prevActor.getInit()) {
+                        thisActor.setInitMod(prevActor.getInitMod() + 1);
                     } else {
                         thisActor.increaseInit(1);
+                        if (thisActor.getInit() == prevActor.getInit() && prevActor.getInitMod() == 0) {
+                            thisActor.increaseInitMod(-1);
+                        }
                     }
                 } else {
                     thisActor.increaseInit(1);
@@ -74,17 +72,15 @@ public class ListAdapter extends BaseAdapter {
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tracker.getNumberOfActors() >= 2 && position < tracker.getNumberOfActors() - 1) {
-                    Actor prevActor = tracker.getActor(position + 1);
-                    if (prevActor.getInit() - thisActor.getInit() <= -1) {
-                        thisActor.increaseInit(-1);
-                        if (prevActor.getInit() - thisActor.getInit() == 0) {
-                            thisActor.setInitMod(prevActor.getInitMod() + 1);
-                        }
-                    } else if (prevActor.getInitMod() - thisActor.getInitMod() <= -1) {
-                        thisActor.setInitMod(prevActor.getInitMod() - 1);
+                if (position < tracker.getNumberOfActors() - 1) {
+                    Actor nextActor = tracker.getActor(position + 1);
+                    if (thisActor.getInit() == nextActor.getInit()) {
+                        thisActor.setInitMod(nextActor.getInitMod() - 1);
                     } else {
                         thisActor.increaseInit(-1);
+                        if (thisActor.getInit() == nextActor.getInit()) {
+                            thisActor.setInitMod(nextActor.getInitMod() + 1);
+                        }
                     }
                 } else {
                     thisActor.increaseInit(-1);

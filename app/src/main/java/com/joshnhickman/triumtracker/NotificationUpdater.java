@@ -12,8 +12,6 @@ import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Actor;
 
 public class NotificationUpdater {
 
-    public static final int NOTIFICATION_ID = 7777;
-
     public static void updateNotification(Context context, Actor currentActor, Actor... actors) {
         // base notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
@@ -47,7 +45,7 @@ public class NotificationUpdater {
         // send notification
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        notificationManager.notify(Globals.NOTIFICATION_ID, builder.build());
     }
 
 }

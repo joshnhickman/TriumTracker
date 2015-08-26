@@ -11,11 +11,9 @@ public class Tracker implements Serializable {
 
     private List<Actor> actors;
     private int currentTurn;
-    private int nextTurn;
 
     public Tracker() {
         currentTurn = -1;
-        nextTurn = -1;
         actors = new ArrayList<>();
     }
 
@@ -41,24 +39,14 @@ public class Tracker implements Serializable {
             if (!isInBounds(currentTurn)) {
                 currentTurn = 0;
             }
-            if (actors.size() > 1) {
-                nextTurn = currentTurn + 1;
-                if (!isInBounds(nextTurn)) {
-                    nextTurn = 0;
-                }
-            } else {
-                nextTurn = -1;
-            }
         } else {
             currentTurn = -1;
-            nextTurn = -1;
         }
         Globals.listAdapter.notifyDataSetChanged();
     }
 
     public void resetTurn() {
         currentTurn = -1;
-        nextTurn = -1;
         nextTurn();
         Globals.listAdapter.notifyDataSetChanged();
     }
@@ -77,8 +65,23 @@ public class Tracker implements Serializable {
         return null;
     }
 
+    public Actor getPreviousActor() {
+        if (!actors.isEmpty()) {
+            int prevTurn = currentTurn - 1;
+            if (prevTurn < 0) {
+                prevTurn = actors.size() - 1;
+            }
+            return actors.get(prevTurn);
+        }
+        return null;
+    }
+
     public Actor getNextActor() {
-        if (!actors.isEmpty() && nextTurn >= 0) {
+        if (!actors.isEmpty()) {
+            int nextTurn = currentTurn + 1;
+            if (nextTurn >= actors.size()) {
+                nextTurn = 0;
+            }
             return actors.get(nextTurn);
         }
         return null;
@@ -99,16 +102,6 @@ public class Tracker implements Serializable {
 
     public boolean isCurrentActor(int index) {
         return currentTurn == index;
-    }
-
-    /**
-     * @return the next Actor
-     */
-    public Actor getNextTurn() {
-        if (actors.size() > 1) {
-            return actors.get(nextTurn);
-        }
-        return null;
     }
 
     /**
@@ -168,7 +161,6 @@ public class Tracker implements Serializable {
     public void clear() {
         actors.clear();
         currentTurn = -1;
-        nextTurn = -1;
         Globals.listAdapter.notifyDataSetChanged();
     }
 
