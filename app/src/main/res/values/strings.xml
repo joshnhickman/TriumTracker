@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="party">Party</string>
-    <string name="ally">Ally</string>
-    <string name="neutral">Neutral</string>
-    <string name="enemy">Enemy</string>
-    <string name="danger">Danger</string>
-
     <string name="app_name">Trium Tracker</string>
     <string name="actor_name_hint">Name</string>
     <string name="player_name_hint">Player name (optional)</string>
@@ -17,5 +11,11 @@
     <string name="minus">-</string>
     <string name="next">NEXT</string>
     <string name="reset">RESET</string>
+
+    <string name="party">Party</string>
+    <string name="ally">Ally</string>
+    <string name="neutral">Neutral</string>
+    <string name="enemy">Enemy</string>
+    <string name="danger">Danger</string>
 
 </resources>

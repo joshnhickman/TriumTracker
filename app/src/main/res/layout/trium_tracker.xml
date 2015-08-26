@@ -10,33 +10,34 @@
     tools:context=".TriumTracker">
 
     <ListView
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/footer"
         android:id="@+id/list_view"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/footer"/>
 
     <LinearLayout
         android:id="@+id/footer"
-        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RESET"
+            android:text="@string/reset"
             style="?android:attr/borderlessButtonStyle"/>
 
         <Button
             android:id="@+id/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NEXT"
+            android:text="@string/next"
             style="?android:attr/borderlessButtonStyle"/>
+
     </LinearLayout>
+
 </RelativeLayout>
