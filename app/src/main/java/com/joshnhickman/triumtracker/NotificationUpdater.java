@@ -18,8 +18,8 @@ public class NotificationUpdater {
                 .setSmallIcon(R.drawable.ic_android)
                 .setContentTitle(currentActor.toString())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setCategory(Notification.CATEGORY_STATUS)
-                .setOngoing(true);
+                .setCategory(Notification.CATEGORY_STATUS);
+//                .setOngoing(true);
         if (actors.length > 1) builder.setContentText(actors[1].toString());
 
         // extended view

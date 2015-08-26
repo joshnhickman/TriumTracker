@@ -1,7 +1,5 @@
 package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain;
 
-import android.util.Log;
-
 import java.io.Serializable;
 
 public class Actor implements Comparable<Actor>, Serializable {
@@ -11,7 +9,6 @@ public class Actor implements Comparable<Actor>, Serializable {
     private Disposition disposition;
     private int init;
     private int initMod;
-    private boolean ally;
 
     public Actor(String name, String playerName, Disposition disposition) {
         this(name, playerName, disposition, 0, 0);

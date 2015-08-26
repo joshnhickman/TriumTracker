@@ -103,7 +103,7 @@ public class ListAdapter extends BaseAdapter {
 
         // set initiative score setter
         TextView initiativeScore = (TextView) actorView.findViewById(R.id.init);
-        initiativeScore.setOnClickListener(new View.OnClickListener() {
+        actorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final EditText input = new EditText(view.getContext());
