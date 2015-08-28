@@ -1,4 +1,4 @@
-package com.joshnhickman.triumtracker;
+package com.joshnhickman.triumtracker.control;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
+import com.joshnhickman.triumtracker.Globals;
+import com.joshnhickman.triumtracker.NextTurnReceiver;
+import com.joshnhickman.triumtracker.R;
 import com.joshnhickman.triumtracker.domain.Actor;
 
 public class NotificationUpdater {

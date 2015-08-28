@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.joshnhickman.triumtracker.control.Combat;
 import com.joshnhickman.triumtracker.domain.Actor;
 import com.joshnhickman.triumtracker.domain.Disposition;
 import com.joshnhickman.triumtracker.domain.Tracker;
@@ -37,6 +38,8 @@ public class TriumTracker extends Activity {
 
         loadState();
 
+        Globals.context = getApplicationContext();
+
         // initializes the buttons
         final Button actionButton = (Button) findViewById(R.id.action);
         final Button stopButton = (Button) findViewById(R.id.stop);
@@ -45,52 +48,21 @@ public class TriumTracker extends Activity {
             @Override
             public void onClick(View view) {
                 if (!Globals.combat) {
-                    Globals.combat = true;
-                    actionButton.setText(getResources().getString(R.string.next));
-                    stopButton.setVisibility(View.VISIBLE);
+                    Combat.start(actionButton, stopButton);
+                } else {
+                    Combat.nextTurn();
                 }
-                Globals.tracker.nextTurn();
-                NotificationUpdater.updateNotification(getApplicationContext(),
-                        Globals.tracker.getCurrentActor(),
-                        Globals.tracker.getNextActors(1));
             }
         });
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Globals.combat) {
-                    Globals.combat = false;
-                    actionButton.setText(getResources().getString(R.string.start));
-                    stopButton.setVisibility(View.INVISIBLE);
-                    NotificationUpdater.stopNotification(getApplicationContext());
-                    Globals.tracker.stop();
-                }
+            if (Globals.combat) {
+                Combat.stop(actionButton, stopButton);
+            }
             }
         });
-
-        // initialize the next button
-//        Button nextButton = (Button) findViewById(R.id.next);
-//        nextButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Globals.tracker.nextTurn();
-//                NotificationUpdater.updateNotification(getApplicationContext(),
-//                        Globals.tracker.getCurrentActor(),
-//                        Globals.tracker.getNextActors(1));
-//            }
-//        });
-//
-//        Button resetButton = (Button) findViewById(R.id.reset);
-//        resetButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Globals.tracker.resetTurn();
-//                NotificationUpdater.updateNotification(getApplicationContext(),
-//                        Globals.tracker.getCurrentActor(),
-//                        Globals.tracker.getNextActors(1));
-//            }
-//        });
 
         // initialize the view
         ListView listView = (ListView) findViewById(R.id.list_view);
@@ -123,7 +95,7 @@ public class TriumTracker extends Activity {
                                     (RadioButton) newCharacterView.findViewById(dispositionRadioGroup.getCheckedRadioButtonId());
                             Disposition disposition =
                                     Disposition.valueOf(dispositionRadioButton.getText().toString().toUpperCase());
-                            if (disposition != Disposition.PARTY && (playerName == null || playerName.isEmpty()))
+                            if (disposition != Disposition.PARTY && playerName.isEmpty())
                                 playerName = "Game Master";
 
                             if (characterName.isEmpty()) {
