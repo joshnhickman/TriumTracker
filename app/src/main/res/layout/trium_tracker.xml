@@ -25,24 +25,18 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/start"
+            android:id="@+id/stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="@string/stop"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <Button
+            android:id="@+id/action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start"
-            style="?android:attr/borderlessButtonStyle"/>
-
-        <Button
-            android:id="@+id/reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reset"
-            style="?android:attr/borderlessButtonStyle"/>
-
-        <Button
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/next"
             style="?android:attr/borderlessButtonStyle"/>
 
     </LinearLayout>

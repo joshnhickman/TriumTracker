@@ -5,6 +5,7 @@
     <string name="next">NEXT</string>
     <string name="reset">RESET</string>
     <string name="start">START</string>
+    <string name="stop">STOP</string>
 
     <string name="actor_name_hint">Name</string>
     <string name="player_name_hint">Player name (optional)</string>

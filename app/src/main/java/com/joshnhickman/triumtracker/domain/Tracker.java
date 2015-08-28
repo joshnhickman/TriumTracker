@@ -45,6 +45,11 @@ public class Tracker implements Serializable {
         Globals.listAdapter.notifyDataSetChanged();
     }
 
+    public void stop() {
+        currentTurn = -1;
+        Globals.listAdapter.notifyDataSetChanged();
+    }
+
     public void resetTurn() {
         currentTurn = -1;
         nextTurn();

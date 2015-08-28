@@ -9,4 +9,6 @@ public class Globals {
     public static ListAdapter listAdapter;
     public static Tracker tracker;
 
+    public static boolean combat;
+
 }

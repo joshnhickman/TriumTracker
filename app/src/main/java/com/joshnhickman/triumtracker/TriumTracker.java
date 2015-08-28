@@ -37,11 +37,18 @@ public class TriumTracker extends Activity {
 
         loadState();
 
-        // initialize the next button
-        Button nextButton = (Button) findViewById(R.id.next);
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        // initializes the buttons
+        final Button actionButton = (Button) findViewById(R.id.action);
+        final Button stopButton = (Button) findViewById(R.id.stop);
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!Globals.combat) {
+                    Globals.combat = true;
+                    actionButton.setText(getResources().getString(R.string.next));
+                    stopButton.setVisibility(View.VISIBLE);
+                }
                 Globals.tracker.nextTurn();
                 NotificationUpdater.updateNotification(getApplicationContext(),
                         Globals.tracker.getCurrentActor(),
@@ -49,16 +56,41 @@ public class TriumTracker extends Activity {
             }
         });
 
-        Button resetButton = (Button) findViewById(R.id.reset);
-        resetButton.setOnClickListener(new View.OnClickListener() {
+        stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Globals.tracker.resetTurn();
-                NotificationUpdater.updateNotification(getApplicationContext(),
-                        Globals.tracker.getCurrentActor(),
-                        Globals.tracker.getNextActors(1));
+                if (Globals.combat) {
+                    Globals.combat = false;
+                    actionButton.setText(getResources().getString(R.string.start));
+                    stopButton.setVisibility(View.INVISIBLE);
+                    NotificationUpdater.stopNotification(getApplicationContext());
+                    Globals.tracker.stop();
+                }
             }
         });
+
+        // initialize the next button
+//        Button nextButton = (Button) findViewById(R.id.next);
+//        nextButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Globals.tracker.nextTurn();
+//                NotificationUpdater.updateNotification(getApplicationContext(),
+//                        Globals.tracker.getCurrentActor(),
+//                        Globals.tracker.getNextActors(1));
+//            }
+//        });
+//
+//        Button resetButton = (Button) findViewById(R.id.reset);
+//        resetButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Globals.tracker.resetTurn();
+//                NotificationUpdater.updateNotification(getApplicationContext(),
+//                        Globals.tracker.getCurrentActor(),
+//                        Globals.tracker.getNextActors(1));
+//            }
+//        });
 
         // initialize the view
         ListView listView = (ListView) findViewById(R.id.list_view);
