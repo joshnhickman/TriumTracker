@@ -1,4 +1,4 @@
-package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain;
+package com.joshnhickman.triumtracker.domain;
 
 import com.joshnhickman.triumtracker.R;
 

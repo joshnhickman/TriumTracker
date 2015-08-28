@@ -2,20 +2,21 @@
 <resources>
 
     <string name="app_name">Trium Tracker</string>
-    <string name="actor_name_hint">Name</string>
-    <string name="player_name_hint">Player name (optional)</string>
-    <string name="ally_hint">Ally</string>
-    <string name="init_hint">New initiative</string>
-    <string name="init_mod_hint">New initiative modifier</string>
-    <string name="plus">+</string>
-    <string name="minus">-</string>
     <string name="next">NEXT</string>
     <string name="reset">RESET</string>
+    <string name="start">START</string>
 
+    <string name="actor_name_hint">Name</string>
+    <string name="player_name_hint">Player name (optional)</string>
     <string name="party">Party</string>
     <string name="ally">Ally</string>
     <string name="neutral">Neutral</string>
     <string name="enemy">Enemy</string>
     <string name="danger">Danger</string>
+
+    <string name="init_hint">New initiative</string>
+
+    <string name="crit_hit">Critical Hit</string>
+    <string name="crit_miss">Critical Miss</string>
 
 </resources>

@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Actor;
+import com.joshnhickman.triumtracker.domain.Actor;
 
 public class NotificationUpdater {
 

@@ -1,4 +1,6 @@
-package com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain;
+package com.joshnhickman.triumtracker.domain;
+
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
@@ -7,14 +9,14 @@ public class Actor implements Comparable<Actor>, Serializable {
     private String name;
     private String playerName;
     private Disposition disposition;
-    private int init;
+    private Initiative init;
     private int initMod;
 
     public Actor(String name, String playerName, Disposition disposition) {
-        this(name, playerName, disposition, 0, 0);
+        this(name, playerName, disposition, new Initiative(0), 0);
     }
 
-    public Actor(String name, String playerName, Disposition disposition, int init, int initMod) {
+    public Actor(String name, String playerName, Disposition disposition, Initiative init, int initMod) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("name cannot be null or empty");
         }
@@ -36,28 +38,23 @@ public class Actor implements Comparable<Actor>, Serializable {
         return playerName;
     }
 
-    public void increaseInit(int inc) {
-        init += inc;
-        initMod = 0;
-    }
-
-    public void setInit(int init) {
-        if (this.init != init) {
+    public void setInit(Initiative init) {
+        if (this.init.getScore() != init.getScore()) {
             initMod = 0;
         }
         this.init = init;
     }
 
-    public int getInit() {
+    public Initiative getInit() {
         return init;
     }
 
-    public String getInitAsString() {
-        return "" + init;
+    public int getInitScore() {
+        return init.getScore();
     }
 
-    public void increaseInitMod(int inc) {
-        initMod += inc;
+    public String getInitAsString() {
+        return init.toString();
     }
 
     public void setInitMod(int initMod) {
@@ -68,21 +65,17 @@ public class Actor implements Comparable<Actor>, Serializable {
         return initMod;
     }
 
-    public String getInitModAsString() {
-        return "" + initMod;
-    }
-
     public Disposition getDisposition() {
         return disposition;
     }
 
     @Override
-    public int compareTo(Actor another) {
-        int initDiff = another.getInit() - init;
-        if (initDiff != 0) {
-            return initDiff;
+    public int compareTo(@NonNull Actor another) {
+        int initCompare = init.compareTo(another.getInit());
+        if (initCompare == 0) {
+            return another.getInitMod() - initMod;
         }
-        return another.getInitMod() - initMod;
+        return initCompare;
     }
 
     @Override

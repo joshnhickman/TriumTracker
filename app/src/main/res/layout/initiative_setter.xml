@@ -9,10 +9,21 @@
         android:hint="@string/init_hint"
         android:inputType="number"/>
 
-    <EditText
-        android:id="@+id/new_init_mod"
+    <RadioGroup
+        android:id="@+id/radio_crit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/init_mod_hint"
-        android:inputType="number"/>
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/radio_crit_hit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crit_hit"/>
+        <RadioButton
+            android:id="@+id/radio_crit_miss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crit_miss"/>
+    </RadioGroup>
+
 </LinearLayout>

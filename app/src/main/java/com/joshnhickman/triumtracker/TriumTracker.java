@@ -2,15 +2,10 @@ package com.joshnhickman.triumtracker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +17,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Actor;
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Disposition;
-import com.joshnhickman.triumtracker.com.joshnhickman.triumtracker.domain.Tracker;
+import com.joshnhickman.triumtracker.domain.Actor;
+import com.joshnhickman.triumtracker.domain.Disposition;
+import com.joshnhickman.triumtracker.domain.Tracker;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
