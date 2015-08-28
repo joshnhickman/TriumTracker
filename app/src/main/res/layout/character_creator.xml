@@ -6,12 +6,14 @@
         android:id="@+id/character_name_edit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:inputType="textCapWords"
         android:hint="@string/actor_name_hint" />
 
     <EditText
         android:id="@+id/player_name_edit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:inputType="textCapWords"
         android:hint="@string/player_name_hint" />
 
     <RadioGroup
