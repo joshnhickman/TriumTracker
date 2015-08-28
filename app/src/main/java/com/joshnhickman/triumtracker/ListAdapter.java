@@ -11,11 +11,10 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.joshnhickman.triumtracker.domain.Actor;
 import com.joshnhickman.triumtracker.domain.Initiative;
-import com.joshnhickman.triumtracker.domain.Tracker;
+import com.joshnhickman.triumtracker.control.Tracker;
 
 public class ListAdapter extends BaseAdapter {
 

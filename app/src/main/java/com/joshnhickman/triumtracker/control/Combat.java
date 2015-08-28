@@ -9,10 +9,13 @@ import com.joshnhickman.triumtracker.R;
 
 public class Combat {
 
-    public static void start(Button actionButton, Button stopButton) {
+    public static void restore() {
+
+    }
+
+    public static void start(View stopButton) {
         if (!Globals.combat) {
             Globals.combat = true;
-            actionButton.setText(Globals.context.getString(R.string.next));
             stopButton.setVisibility(View.VISIBLE);
             Globals.tracker.nextTurn();
             NotificationUpdater.updateNotification(Globals.context,
@@ -21,10 +24,9 @@ public class Combat {
         }
     }
 
-    public static void stop(Button actionButton, Button stopButton) {
+    public static void stop(View stopButton) {
         if (Globals.combat) {
             Globals.combat = false;
-            actionButton.setText(Globals.context.getString(R.string.start));
             stopButton.setVisibility(View.INVISIBLE);
             NotificationUpdater.stopNotification(Globals.context);
             Globals.tracker.stop();

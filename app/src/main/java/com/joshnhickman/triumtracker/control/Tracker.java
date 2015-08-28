@@ -1,10 +1,13 @@
-package com.joshnhickman.triumtracker.domain;
+package com.joshnhickman.triumtracker.control;
 
 import com.joshnhickman.triumtracker.Globals;
+import com.joshnhickman.triumtracker.domain.Actor;
+import com.joshnhickman.triumtracker.domain.Disposition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class Tracker implements Serializable {
@@ -144,6 +147,15 @@ public class Tracker implements Serializable {
     public void clear() {
         actors.clear();
         currentTurn = -1;
+        Globals.listAdapter.notifyDataSetChanged();
+    }
+
+    public void clearNonParty() {
+        Iterator<Actor> i = actors.iterator();
+        while (i.hasNext()) {
+            Actor actor = i.next();
+            if (actor.getDisposition() != Disposition.PARTY) i.remove();
+        }
         Globals.listAdapter.notifyDataSetChanged();
     }
 

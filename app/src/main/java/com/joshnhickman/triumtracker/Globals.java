@@ -2,7 +2,7 @@ package com.joshnhickman.triumtracker;
 
 import android.content.Context;
 
-import com.joshnhickman.triumtracker.domain.Tracker;
+import com.joshnhickman.triumtracker.control.Tracker;
 
 public class Globals {
 

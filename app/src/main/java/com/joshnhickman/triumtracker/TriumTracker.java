@@ -1,15 +1,17 @@
 package com.joshnhickman.triumtracker;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,16 +20,17 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.joshnhickman.triumtracker.control.Combat;
+import com.joshnhickman.triumtracker.control.NotificationUpdater;
 import com.joshnhickman.triumtracker.domain.Actor;
 import com.joshnhickman.triumtracker.domain.Disposition;
-import com.joshnhickman.triumtracker.domain.Tracker;
+import com.joshnhickman.triumtracker.control.Tracker;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
 
-public class TriumTracker extends Activity {
+public class TriumTracker extends AppCompatActivity {
 
     private static final String FILE_NAME = "trium_tracker_save";
 
@@ -41,14 +44,21 @@ public class TriumTracker extends Activity {
         Globals.context = getApplicationContext();
 
         // initializes the buttons
-        final Button actionButton = (Button) findViewById(R.id.action);
+        final FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.floating_action);
         final Button stopButton = (Button) findViewById(R.id.stop);
+
+        if (Globals.combat) {
+            stopButton.setVisibility(View.VISIBLE);
+            NotificationUpdater.updateNotification(getApplicationContext(),
+                    Globals.tracker.getCurrentActor(),
+                    Globals.tracker.getNextActors(1));
+        }
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!Globals.combat) {
-                    Combat.start(actionButton, stopButton);
+                    Combat.start(stopButton);
                 } else {
                     Combat.nextTurn();
                 }
@@ -59,7 +69,7 @@ public class TriumTracker extends Activity {
             @Override
             public void onClick(View view) {
             if (Globals.combat) {
-                Combat.stop(actionButton, stopButton);
+                Combat.stop(stopButton);
             }
             }
         });
@@ -81,7 +91,9 @@ public class TriumTracker extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_new) {
             LayoutInflater inflater = LayoutInflater.from(this);
-            final View newCharacterView = inflater.inflate(R.layout.character_creator, null);
+//            final View newCharacterView = inflater.inflate(R.layout.character_creator, null);
+            final View newCharacterView = inflater.inflate(R.layout.character_creator,
+                    (ViewGroup) findViewById(android.R.id.content), false);
             new AlertDialog.Builder(this)
                     .setTitle("Add new character")
                     .setView(newCharacterView)
@@ -113,8 +125,19 @@ public class TriumTracker extends Activity {
             return true;
         }
         if (id == R.id.action_discard) {
-            Globals.tracker.clear();
-            Globals.listAdapter.notifyDataSetChanged();
+            if (!Globals.combat) {
+                Globals.tracker.clearNonParty();
+            } else {
+                Toast.makeText(getApplicationContext(), "cannot delete during combat", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+        if (id == R.id.action_discard_all) {
+            if (!Globals.combat) {
+                Globals.tracker.clear();
+            } else {
+                Toast.makeText(getApplicationContext(), "cannot delete during combat", Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -138,7 +161,8 @@ public class TriumTracker extends Activity {
      */
     private void saveState() {
         try (ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(FILE_NAME, Context.MODE_PRIVATE))) {
-            oos.writeObject(Globals.tracker.getActors());
+            oos.writeObject(Globals.tracker);
+            oos.writeBoolean(Globals.combat);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "failed to save state", Toast.LENGTH_SHORT).show();
         }
@@ -147,10 +171,10 @@ public class TriumTracker extends Activity {
     /**
      * Loads the last used characters
      */
-    @SuppressWarnings("unchecked")
     private void loadState() {
         try (ObjectInputStream ois = new ObjectInputStream(openFileInput(FILE_NAME))) {
-            Globals.tracker = new Tracker((List<Actor>) ois.readObject());
+            Globals.tracker = (Tracker) ois.readObject();
+            Globals.combat = ois.readBoolean();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "failed to load saved state", Toast.LENGTH_SHORT).show();
         }
