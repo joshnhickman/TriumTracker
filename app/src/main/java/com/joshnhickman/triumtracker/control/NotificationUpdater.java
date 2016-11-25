@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import com.joshnhickman.triumtracker.Globals;
 import com.joshnhickman.triumtracker.NextTurnReceiver;
 import com.joshnhickman.triumtracker.R;
+import com.joshnhickman.triumtracker.TriumTracker;
 import com.joshnhickman.triumtracker.domain.Actor;
 
 public class NotificationUpdater {
@@ -22,8 +23,15 @@ public class NotificationUpdater {
                 .setContentTitle(currentActor.toString())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setCategory(Notification.CATEGORY_STATUS)
-                .setOngoing(true);
+                .setOngoing(true)
+                .setAutoCancel(false);
         if (actors.length > 1) builder.setContentText(actors[1].toString());
+
+        // intent to use when clicked
+        Intent intent = new Intent(context, TriumTracker.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        builder.setContentIntent(pendingIntent);
 
         // extended view
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
@@ -36,14 +44,6 @@ public class NotificationUpdater {
         PendingIntent nextPendingIntent =
                 PendingIntent.getBroadcast(context, 0, nextActorIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_play_arrow, "NEXT", nextPendingIntent);
-
-        // intent to use when clicked
-//        Intent resultIntent = new Intent(context, TriumTracker.class);
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-//        stackBuilder.addParentStack(TriumTracker.class);
-//        stackBuilder.addNextIntent(resultIntent);
-//        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//        builder.setContentIntent(resultPendingIntent);
 
         // send notification
         NotificationManager notificationManager =
